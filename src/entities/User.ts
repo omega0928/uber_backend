@@ -1,12 +1,23 @@
+import bcrtpy from "bcrypt";
 import { IsEmail } from "class-validator";
 import {
   BaseEntity,
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import Chat from "./Chat";
+import Message from "./Message";
+import Ride from "./Ride";
+import Verification from "./Verification";
+
+const BCRTPY_ROUND = 10;
 
 @Entity()
 class User extends BaseEntity {
@@ -58,12 +69,44 @@ class User extends BaseEntity {
   @Column({ type: "double precision", default: 0 })
   lastOrientation: number;
 
+  @ManyToOne(type => Chat, chat => chat.participants)
+  chat: Chat;
+
+  @OneToMany(type => Message, message => message.user)
+  message: Message[];
+
+  @OneToMany(type => Verification, verification => verification.user)
+  verifications: Verification[];
+
+  @OneToMany(type => Ride, ride => ride.passenger)
+  rideAsPassenger: Ride[];
+
+  @OneToMany(type => Ride, ride => ride.driver)
+  rideAsDriver: Ride[];
+
+  @CreateDateColumn() createdAt: string;
+  @UpdateDateColumn() updatedAt: string;
+
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  @CreateDateColumn() createdAt: string;
-  @UpdateDateColumn() updatedAt: string;
+  public comparePassword(password: string): Promise<boolean> {
+    return bcrtpy.compare(password, this.password);
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async savePassword(): Promise<void> {
+    if (this.password) {
+      const hashPassword = await this.hashPassword(this.password);
+      this.password = hashPassword;
+    }
+  }
+
+  private hashPassword(password: string): Promise<string> {
+    return bcrtpy.hash(password, BCRTPY_ROUND);
+  }
 }
 
 export default User;
