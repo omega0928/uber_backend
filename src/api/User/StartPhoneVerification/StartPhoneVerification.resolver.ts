@@ -13,6 +13,7 @@ const resolvers: Resolvers = {
       args: StartPhoneVerificationMutationArgs
     ): Promise<StartPhoneVerificationResponse> => {
       const { phoneNumber } = args;
+      console.log('phoneNumber', phoneNumber) 
       try {
         const existingVerification = await Verification.findOne({
           payload: phoneNumber

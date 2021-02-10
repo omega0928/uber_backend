@@ -35,7 +35,7 @@ class Verification extends BaseEntity {
   createKey(): void {
     if (this.target === PHONE) {
       this.key = Math.floor(Math.random() * 100000).toString();
-    } else if (this.target === EMAIL){
+    } else if (this.target === EMAIL) {
       this.key = Math.random().toString(36).substr(2);
     }
   }
