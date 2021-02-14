@@ -5,9 +5,9 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from "typeorm";
-import { verificationTarget } from "src/types/types";
+import { verificationTarget } from "../types/types";
 
 const PHONE = "PHONE";
 const EMAIL = "EMAIL";
@@ -29,6 +29,7 @@ class Verification extends BaseEntity {
   verified: boolean;
 
   @CreateDateColumn() createdAt: string;
+
   @UpdateDateColumn() updatedAt: string;
 
   @BeforeInsert()
@@ -36,9 +37,10 @@ class Verification extends BaseEntity {
     if (this.target === PHONE) {
       this.key = Math.floor(Math.random() * 100000).toString();
     } else if (this.target === EMAIL) {
-      this.key = Math.random().toString(36).substr(2);
+      this.key = Math.random()
+        .toString(36)
+        .substr(2);
     }
   }
 }
-
 export default Verification;

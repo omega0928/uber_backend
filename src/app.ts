@@ -26,7 +26,7 @@ class App {
       const user = decodeJWT(token);
       console.log(user);
     } else {
-      console.log('test')
+      console.log('app.29line')
     }
     next();
   };

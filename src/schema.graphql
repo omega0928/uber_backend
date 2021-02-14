@@ -118,5 +118,5 @@ type Verification {
   key: String!
   verified: Boolean!
   createAt: String!
-  updateAt: String!
+  updateAt: String
 }
