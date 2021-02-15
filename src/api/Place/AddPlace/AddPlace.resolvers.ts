@@ -1,25 +1,20 @@
+import Place from "../../../entities/Place";
 import User from "../../../entities/User";
-import {
-  ReportMovementMutationArgs,
-  ReportMovementResponse
-} from "../../../types/graph";
+import { AddPlaceMutationArgs, AddPlaceResponse } from "../../../types/graph";
 import { Resolvers } from "../../../types/resolvers";
-import cleanNullArgs from "../../../utils/cleanNullArg";
 import privateResolver from "../../../utils/privateResolver";
 
 const resolvers: Resolvers = {
   Mutation: {
-    ReportMovement: privateResolver(
+    AddPlace: privateResolver(
       async (
         _,
-        args: ReportMovementMutationArgs,
-        { req, pubSub }
-      ): Promise<ReportMovementResponse> => {
+        args: AddPlaceMutationArgs,
+        { req }
+      ): Promise<AddPlaceResponse> => {
         const user: User = req.user;
-        const notNull = cleanNullArgs(args);
         try {
-          await User.update({ id: user.id }, { ...notNull });
-          pubSub.publish("driverUpdate", { DriversSubscription: user });
+          await Place.create({ ...args, user }).save();
           return {
             ok: true,
             error: null

@@ -14,6 +14,7 @@ import {
 } from "typeorm";
 import Chat from "./Chat";
 import Message from "./Message";
+import Place from "./Place";
 import Ride from "./Ride";
 
 const BCRTPY_ROUND = 10;
@@ -71,17 +72,20 @@ class User extends BaseEntity {
   @Column({ type: "text", nullable: true })
   fbId: string;
 
-  @ManyToOne(type => Chat, chat => chat.participants)
+  @ManyToOne((type) => Chat, (chat) => chat.participants)
   chat: Chat;
 
-  @OneToMany(type => Message, message => message.user)
+  @OneToMany((type) => Message, (message) => message.user)
   message: Message[];
 
-  @OneToMany(type => Ride, ride => ride.passenger)
+  @OneToMany((type) => Ride, (ride) => ride.passenger)
   rideAsPassenger: Ride[];
 
-  @OneToMany(type => Ride, ride => ride.driver)
+  @OneToMany((type) => Ride, (ride) => ride.driver)
   rideAsDriver: Ride[];
+
+  @OneToMany(type => Place, place => place.user)
+  places: Place[];
 
   @CreateDateColumn() createdAt: string;
   @UpdateDateColumn() updatedAt: string;
