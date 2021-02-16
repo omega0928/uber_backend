@@ -17,10 +17,11 @@ type User {
   lastLat: Float
   lastOrientation: Float
   fbid: String
-  chat: Chat
   message: [Message]
   ridesAsPassenger: [Ride]
   ridesAsDriver: [Ride]
+  chatsAsDriver: [Chat]
+  chatsAsPassenger: [Chat]
   places: [Place]
   createdAt: String!
   updatedAt: String
